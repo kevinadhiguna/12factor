@@ -1,0 +1,14 @@
+## IV. Backing services
+### Perlakukan backing services sebagai sumber daya terlampir
+
+Sebuah *backing service* adalah segala layanan yang digunakan aplikasi melalui jaringan sebagai bagian dari operasi normalnya. Contohnya termasuk datastores (seperti [MySQL](http://dev.mysql.com/) atau [CouchDB](http://couchdb.apache.org/)), sistem messaging/queueing (seperti [RabbitMQ](http://www.rabbitmq.com/) atau [Beanstalkd](https://beanstalkd.github.io)), layanan SMTP untuk email keluar (seperti [Postfix](http://www.postfix.org/)), dan sistem cache (seperti [Memcached](http://memcached.org/)).
+
+Backing services seperti basis data umumnya dikelola oleh administrator sistem yang sama dengan yang melakukan deploy aplikasi. Selain layanan yang dikelola secara lokal ini, aplikasi mungkin juga memiliki layanan yang disediakan dan dikelola oleh pihak ketiga. Contohnya termasuk layanan SMTP (seperti [Postmark](http://postmarkapp.com/)), layanan pengumpulan metrik (seperti [New Relic](http://newrelic.com/) atau [Loggly](http://www.loggly.com/)), layanan binary asset (seperti [Amazon S3](http://aws.amazon.com/s3/)), dan bahkan layanan konsumen yang dapat diakses API (seperti [Twitter](http://dev.twitter.com/), [Google Maps](https://developers.google.com/maps/), atau [Last.fm](http://www.last.fm/api)).
+
+**Kode untuk twelve-factor app tidak membedakan antara layanan lokal dan pihak ketiga.** Untuk aplikasi, keduanya adalah sumber daya yang dilampirkan, diakses melalui URL atau pencari lokasi/kredensial lain yang disimpan dalam [config](./config). [Deploy](./codebase) dari twelve-factor app harus dapat menukar basis data MySQL lokal dengan basis data yang dikelola oleh pihak ketiga (seperti [Amazon RDS](http://aws.amazon.com/rds/)) tanpa perubahan apa pun pada kode aplikasi. Demikian pula, server SMTP lokal dapat ditukar dengan layanan SMTP pihak ketiga (seperti Postmark) tanpa perubahan kode. Dalam kedua kasus, hanya resource handle dalam konfigurasi yang perlu diubah.
+
+Setiap backing service berbeda adalah *sumber daya*. Misalnya, basis data MySQL adalah sumber daya; dua basis data MySQL (digunakan untuk sharding pada layanan aplikasi) memenuhi syarat sebagai dua sumber daya berbeda. Twelve-factor app memperlakukan basis data ini sebagai *sumber daya terlampir*, yang menunjukkan loose coupling terhadap aplikasi yang di-deploy.
+
+<img src="/images/attached-resources.png" class="full" alt="Deploy tahap produksi yang dilampirkan ke empat backing services." />
+
+Sumber daya dapat dilampirkan dan dilepaskan dari deploys sesuai kehendak. Contohnya, apabila basis data aplikasi tidak berfungsi karena masalah perangkat keras, administrator aplikasi mungkin menjalankan server basis data baru yang dipulihkan dari cadangan terbaru. Basis data produksi saat ini dapat dilepaskan, dan basis data baru dilampirkan -- semuanya tanpa perubahan kode apa pun.
