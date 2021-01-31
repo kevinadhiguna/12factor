@@ -1,0 +1,14 @@
+## IX. Disposability
+### Memaksimalkan ketahanan dengan fast startup dan graceful shutdown
+
+**[Processes](./processes) twelve-factor app bersifat *sekali pakai*, yang berarti dapat dimulai atau dihentikan dalam waktu singkat.** Ini memfasilitasi penskalaan elastis yang cepat, deployment [code](./codebase) yang cepat atau perubahan [config](./config), dan ketahanan deployment tahap produksi.
+
+Proses harus berusaha untuk **meminimalkan startup time**. Idealnya, suatu proses membutuhkan beberapa detik dari saat perintah peluncuran dijalankan hingga proses selesai dan siap menerima request atau jobs. Startup time yang singkat memberikan lebih banyak agility untuk proses [rilis](./build-release-run) dan peningkatan skala; dan ini membantu ketahanan karena process manager dapat dengan lebih mudah memindahkan proses ke mesin fisik baru bila diperlukan.
+
+Proses **shut down gracefully ketika menerima sinyal [SIGTERM](http://en.wikipedia.org/wiki/SIGTERM)** dari process manager. Untuk proses web, graceful shutdown dicapai dengan berhenti mendengarkan pada port layanan (dengan demikian menolak request baru), mengizinkan request saat ini untuk menyelesaikan, dan kemudian keluar. Tersirat dalam model ini bahwa request HTTP pendek (tidak lebih dari beberapa detik), atau dalam kasus yang lama, klien harus mencoba menyambung kembali dengan mulus ketika koneksi terputus.
+
+Untuk worker process, graceful shutdown dicapai dengan mengembalikan job saat ini ke work queue. Misalnya, di [RabbitMQ](http://www.rabbitmq.com/) worker dapat mengirim [`NACK`](http://www.rabbitmq.com/amqp-0-9-1-quickref.html#basic.nack); di [Beanstalkd](https://beanstalkd.github.io), job dikembalikan ke queue secara otomatis setiap kali sambungan worker terputus. Lock-based system seperti [Delayed Job](https://github.com/collectiveidea/delayed_job#readme) perlu memastikan untuk melepaskan lock mereka pada job record. Tersirat dalam model ini bahwa semua jobs adalah [reentrant](http://en.wikipedia.org/wiki/Reentrant_%28subroutine%29), yang biasanya dicapai dengan membungkus hasil dalam transaksi, atau membuat operasi [idempoten](http://en.wikipedia.org/wiki/Idempotence).
+
+Proses juga harus **tahan terhadap kematian mendadak**, jika terjadi kegagalan pada perangkat keras yang mendasarinya. Meskipun ini adalah kejadian yang jauh lebih jarang daripada graceful shutdown dengan `SIGTERM`, itu masih bisa terjadi. Pendekatan yang direkomendasikan adalah penggunaan robust queueing backend, seperti Beanstalkd, yang mengembalikan job ke queue ketika klien memutuskan koneksi atau time out. Apa pun itu, twelve-factor app dirancang untuk menangani penghentian tidak terduga dan non-graceful. [Desain khusus Crash-only](http://lwn.net/Articles/191059/) membawa konsep ini ke [simpulan logis](http://docs.couchdb.org/en/latest/intro/overview.html).
+
+
