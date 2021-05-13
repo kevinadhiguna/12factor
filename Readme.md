@@ -48,3 +48,5 @@ and [more](https://github.com/heroku/12factor/graphs/contributors).
 
 Released under the MIT License:
 https://opensource.org/licenses/MIT
+
+[![Visits Badge](https://badges.pufler.dev/visits/kevinadhiguna/12factor)](https://github.com/kevinadhiguna)
