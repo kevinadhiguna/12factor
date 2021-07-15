@@ -3,15 +3,15 @@
 
 Secara historis, ada kesenjangan substantial antara tahap development (pengembang membuat pengeditan langsung ke [deploy](./codebase) lokal aplikasi) dan tahap production (aplikasi yang di-deploy yang diakses oleh end user). Kesenjangan ini terwujud dalam tiga bidang:
 
-* **Jeda waktu**: Pengembang mungkin mengerjakan code yang membutuhkan waktu berhari-hari, berminggu-minggu, atau bahkan berbulan-bulan untuk masuk ke tahap production.
-* **Kesenjangan personel**: Pengembang menulis code, ops engineers melakukan deployment aplikasi tersebut.
-* **Celah tool**: Pengembang mungkin menggunakan stack seperti Nginx, SQLite, dan OS X, sedangkan deployment tahap production menggunakan Apache, MySQL, dan Linux.
+* **Time gap**: Pengembang mungkin mengerjakan code yang membutuhkan waktu berhari-hari, berminggu-minggu, atau bahkan berbulan-bulan untuk masuk ke tahap production.
+* **Personnel Gap**: Pengembang menulis code, ops engineers melakukan deployment aplikasi tersebut.
+* **Tools Gap**: Pengembang mungkin menggunakan stack seperti Nginx, SQLite, dan OS X, sedangkan deployment tahap production menggunakan Apache, MySQL, dan Linux.
 
 **Twelve-factor app dirancang untuk [continuous deployment](http://avc.com/2011/02/continuous-deployment/) dengan menjaga gap antara tahap pengembangan dan production tetap kecil.** Melihat tiga gap yang dijelaskan di atas:
 
-* Buat jeda waktu kecil: pengembang dapat menulis code dan men-deploynya beberapa jam atau bahkan beberapa menit kemudian.
-* Buat kesenjangan personel menjadi kecil: pengembang yang menulis code sangat terlibat dalam deployment dan mengamati perilakunya dalam production.
-* Buat celah tool menjadi kecil: pertahankan agar tahap pengembangan dan produksi semirip mungkin.
+* Buat time gap kecil: pengembang dapat menulis code dan men-deploynya beberapa jam atau bahkan beberapa menit kemudian.
+* Buat personnel gap kecil: pengembang yang menulis code sangat terlibat dalam deployment dan mengamati perilakunya dalam production.
+* Buat tools gap kecil: pertahankan agar tahap pengembangan dan produksi semirip mungkin.
 
 Meringkas hal di atas menjadi sebuah tabel:
 
